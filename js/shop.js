@@ -1,0 +1,137 @@
+/**
+ * Created by User on 11.09.2017.
+ */
+const USDRUB = 65.20
+
+const cart = [
+	{
+		id: 1,
+		currency: 'USD',
+		price: 14.0,
+		count: 3
+	},
+	{
+		id: 4,
+		currency: 'USD',
+		price: 2.0,
+		count: 7
+	},
+	{
+		id: 2,
+		currency: 'USD',
+		price: 5.0,
+		count: 30
+	},
+	{
+		id: 1,
+		currency: 'USD',
+		price: 14.0,
+		count: 1
+	},
+	{
+		id: 3,
+		currency: 'USD',
+		price: 150.0,
+		count: 1
+	},
+	{
+		id: 2,
+		currency: 'USD',
+		price: 5.0,
+		count: 35
+	},
+	{
+		id: 1,
+		currency: 'USD',
+		price: 14.0,
+		count: 2
+	},
+]
+
+const storage = {
+	1: true,
+	2: true,
+	3: false,
+	4: true
+}
+
+// Functions to sort array of objects by 'id' field
+function sortById(objA, objB) {
+	return objA.id - objB.id;
+}
+function sortCartById(arr) {
+	arr.sort(sortById);
+}
+
+// First we sort cart by ids of added items
+sortCartById(cart);
+
+document.write('<h4>Отсортированная по id корзинка</h4>');
+for (var i = 0; i < cart.length; i++) {
+	document.write(cart[i].id + " - " + cart[i].count + "<br>");
+}
+document.write("<hr>");
+
+// Starting from the first item in the cart
+var j = 0;
+
+// For all unique goods from the storage
+for (var i = 1; i <= 4; i++)
+{
+	// If the store has it
+	if (storage[i]) {
+		var firstItemWithThisID = j;
+		j++;
+		// We group money and count in the first item in the cart with this id
+		while ( (j < cart.length) && (cart[j].id == i) ) {
+			cart[firstItemWithThisID].count += cart[j].count;
+			cart[j].id = 0;
+			j++;
+		}
+	}
+	// If the store is out of this goods we skip them
+	else
+	{
+		while ( (j < cart.length) && (cart[j].id == i) ) {
+			cart[j].id = 0;
+			j++;
+		}
+	}
+}
+
+// Print cart
+document.write('<h4>Уплотненная корзинка</h4>');
+for (var i = 0; i < cart.length; i++) {
+	if (cart[i].id) {
+		document.write(cart[i].id + " - " + cart[i].count + "<br>");
+	}
+}
+
+var bill = {
+	total: { currency: "RUB", price: 0 },
+	items: []
+}
+
+// Count total sum and pin unique items to the bill
+j = 0;
+for (var i = 0; i < cart.length; i++) {
+	if (cart[i].id) {
+		bill.total.price += cart[i].count * cart[i].price * USDRUB;
+		bill.items[j] = cart[i];
+		j++;
+	}
+}
+
+// Pretty print the bill
+document.write("<hr>");
+document.write("<h4>Счет:</h4>");
+
+document.write("<table><thead><td>ID</td><td>Цена</td><td>Кол-во</td></thead><tbody>");
+for (var i = 0; i < bill.items.length; i++) {
+	document.write("<tr><td>" + bill.items[i].id + "</td><td>" +
+		bill.items[i].price + "</td><td>" +
+		bill.items[i].count + "</td></tr>");
+}
+document.write("</tbody></<table>");
+
+document.write("<p>Итого: "+ bill.total.price + " " + bill.total.currency +"</p>");
