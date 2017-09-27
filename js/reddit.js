@@ -8,7 +8,7 @@ $(document).ready(function () {
         var searchTerm = $("#searchTerm").val();
         var result = "";
         $.ajax(
-            "https://www.reddit.com/subreddits/search.json",
+            "https://www.reddit.com/search.json",
             {
                 data: { q: searchTerm }, // what are we looking for
 
@@ -22,7 +22,35 @@ $(document).ready(function () {
 
                         // we print results (each one is wrapped in '<p>' tag)
                         $.each(responseData.data.children, function(idx, searchResult) {
-                            result += "<p><a href='https://www.reddit.com" + searchResult.data.url + "'>" + searchResult.data.title + "</a></p>"
+                            result += "<a href='" + searchResult.data.url + "'>" +
+                                        "<div class='panel panel-default'>" +
+                                            "<div class='panel-body'>" +
+                                                "<div class='media'>" +
+                                                    "<div class='media-left'>";
+
+                            // if there's no thumbnail
+                            if (searchResult.data.thumbnail === "default")
+                            {
+	                            result += "<img src='" +
+                                            searchResult.data.preview.images[0].source.url +
+                                            "' class='media-object' style='width:60px'>";
+                            }
+                            else
+                            {
+	                            result += "<img src='" +
+                                            searchResult.data.thumbnail +
+                                            "' class='media-object' style='width:60px'>";
+                            }
+
+                            result +=
+                                                    "</div>" +
+                                                    "<div class='media-body'>" +
+                                                        searchResult.data.title +
+                                                    "</div>" +
+                                                "</div>" +
+	                                        "</div>" +
+	                                    "</div>" +
+                                    "</a>";
                         });
                     }
                     else
