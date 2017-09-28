@@ -16,12 +16,12 @@ $(document).ready(function () {
                 {
                     if (responseData.data.children.length > 0)
                     {
-                        // how many results we have found
-                        result += "<p># of results: " + responseData.data.children.length + "</p>";
-
                         // we print results (each one is wrapped in 'panel' and 'media' tags)
                         let wrappedItems = responseData.data.children.map(wrapElements);
-                        result += wrappedItems.join('');
+
+                        // how many results we have found + all results wrapped in proper tags
+                        result = `<p># of results: ${responseData.data.children.length}</p>
+                                    ${wrappedItems.join('')}`;
                     }
                     else
                     {
@@ -42,27 +42,29 @@ $(document).ready(function () {
 
 function wrapElements(element, index, array)
 {
-    // what tags we are wrapping elements in
-    let result = `<a href='${element.data.url}'>
-                    <div class='panel panel-default'>
-                        <div class='panel-body'>
-                            <div class='media'>
-                                <div class='media-left'>`;
+    let thumbnail; //this will be the pic
 
     // if there's no thumbnail we use this pic
     if (element.data.thumbnail === "default")
     {
-        result += `<img src='${element.data.preview.images[0].source.url}' 
+        thumbnail = `<img src='${element.data.preview.images[0].source.url}' 
                         class='media-object' style='width:60px'>`
     }
     // else we use a thumbnail
     else
     {
-        result += `<img src='${element.data.thumbnail}' 
+        thumbnail = `<img src='${element.data.thumbnail}' 
                         class='media-object' style='width:60px'>`;
     }
 
-    result += `</div>
+    // what tags we are wrapping elements in
+    let wrappedElement = `<a href='${element.data.url}'>
+                    <div class='panel panel-default'>
+                        <div class='panel-body'>
+                            <div class='media'>
+                                <div class='media-left'>
+                                    ${thumbnail}
+                                </div>
                                 <div class='media-body'>
                                     ${element.data.title}
                                 </div>
@@ -70,5 +72,5 @@ function wrapElements(element, index, array)
                         </div>
                     </div>
                 </a>`;
-    return result;
+    return wrappedElement;
 }
