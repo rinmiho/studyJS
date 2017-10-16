@@ -1,6 +1,12 @@
 /**
  * Created by User on 27.09.2017.
  */
+
+/**
+ * Получить с Reddit'а результаты поиска по указанному запросу
+ * и вывести их на страницу.
+ */
+
 $(document).ready(function () {
     $("#btnRedditAccio").click(function(){
 
